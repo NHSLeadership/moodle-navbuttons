@@ -102,6 +102,14 @@ class block_navbuttons_edit_form extends moodleform {
         $mform->addElement('header', 'completebutton', get_string('completebutton', 'block_navbuttons'));
         $mform->addElement('select', 'completebuttonshow', get_string('displaybutton', 'block_navbuttons'), $showhide);
 
+        $positionopts = array(
+            BLOCK_NAVBUTTONS_COMPLETEBUTTON_BEFORE => get_string('completebuttonbefore', 'block_navbuttons'),
+            BLOCK_NAVBUTTONS_COMPLETEBUTTON_MIDDLE => get_string('completebuttonmiddle', 'block_navbuttons'),
+            BLOCK_NAVBUTTONS_COMPLETEBUTTON_AFTER => get_string('completebuttonafter', 'block_navbuttons'),
+        );
+        $mform->addElement('select', 'completebuttonposition', get_string('completebuttonposition', 'block_navbuttons'), $positionopts);
+        $mform->setDefault('completebuttonposition', BLOCK_NAVBUTTONS_COMPLETEBUTTON_BEFORE);
+
         $openin = array(
             BLOCK_NAVBUTTONS_SAMEWINDOW => get_string('linktargettop', 'editor'),
             BLOCK_NAVBUTTONS_NEWWINDOW => get_string('linktargetblank', 'editor')
@@ -176,6 +184,7 @@ $defaults->extra2link = $settings->extra2link;
 $defaults->extra2title = $settings->extra2title;
 $defaults->extra2openin = $settings->extra2openin;
 $defaults->completebuttonshow = $settings->completebuttonshow;
+$defaults->completebuttonposition = $settings->completebuttonposition;
 
 $draftitemid = file_get_submitted_draft_itemid('homebuttonicon');
 file_prepare_draft_area($draftitemid, $context->id, 'block_navbuttons', 'icons', BLOCK_NAVBUTTONS_HOMEICON, array(
@@ -244,6 +253,7 @@ if ($data = $mform->get_data() and $data->action == 'savesettings') {
     $update->extra2title = $data->extra2title;
     $update->extra2openin = $data->extra2openin;
     $update->completebuttonshow = $data->completebuttonshow;
+    $update->completebuttonposition = $data->completebuttonposition;
 
     file_save_draft_area_files($data->homebuttonicon, $context->id, 'block_navbuttons', 'icons', BLOCK_NAVBUTTONS_HOMEICON, array(
         'subdirs' => 0, 'maxfiles' => 1

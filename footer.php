@@ -211,6 +211,10 @@ function draw_navbuttons() {
         }
     }
 
+    if($settings->completebuttonposition == 'before') {
+        $output .= make_activitycomplete_button($settings);
+    }
+
     if ($settings->prevbuttonshow && $prev) {
         list($icon, $bgcolour) = navbutton_get_icon($settings->buttonstype, 'prev', $context, BLOCK_NAVBUTTONS_PREVICON,
                                                     $settings->backgroundcolour, $settings->customusebackground);
@@ -218,11 +222,19 @@ function draw_navbuttons() {
                                   $prev->link, "prev");
     }
 
+    if($settings->completebuttonposition == 'middle') {
+        $output .= make_activitycomplete_button($settings);
+    }
+
     if ($settings->nextbuttonshow && $next) {
         list($icon, $bgcolour) = navbutton_get_icon($settings->buttonstype, 'next', $context, BLOCK_NAVBUTTONS_NEXTICON,
                                                     $settings->backgroundcolour, $settings->customusebackground);
         $output .= make_navbutton($icon, $bgcolour, get_string('nextactivity', 'block_navbuttons').': '.$next->name,
                                   $next->link, "next");
+    }
+
+    if($settings->completebuttonposition == 'after') {
+        $output .= make_activitycomplete_button($settings);
     }
 
     if ($settings->lastbuttonshow) {
@@ -271,8 +283,6 @@ function draw_navbuttons() {
         $output .= make_navbutton($icon, $bgcolour, $settings->extra2title, $settings->extra2link,
                                   "extra2", $settings->extra2openin);
     }
-
-    $output .= make_activitycomplete_button($settings);
 
     $output .= '</div>';
     $output .= '<br style="clear:both;" />';

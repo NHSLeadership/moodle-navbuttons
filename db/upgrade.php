@@ -89,5 +89,20 @@ function xmldb_block_navbuttons_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2017030600, 'navbuttons');
     }
 
+    if ($oldversion < 2017051700) {
+
+        // Define field completebuttonposition to be added to navbuttons.
+        $table = new xmldb_table('navbuttons');
+        $field = new xmldb_field('completebuttonposition', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'before', 'completebuttonshow');
+
+        // Conditionally launch add field completebuttonposition.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Navbuttons savepoint reached.
+        upgrade_block_savepoint(true, 2017051700, 'navbuttons');
+    }
+
     return true;
 }
