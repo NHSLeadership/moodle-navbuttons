@@ -1,0 +1,8 @@
+{
+    "name": "davosmith/moodle-navbuttons",
+    "description": "Adds navigation buttons to the bottom of each activity page in Moodle",
+    "type": "moodle-block",
+    "require": {
+        "composer/installers": "^1.3"
+    }
+}
