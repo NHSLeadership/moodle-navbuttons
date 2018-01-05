@@ -1,7 +1,7 @@
 {
   "name": "NHSLeadership/moodle-navbuttons",
   "description": "Based on original Moodle Navbuttons plugin, modified and enhanced for internal use",
-  "type": "moodle-blocks",
+  "type": "moodle-block",
   "require": {
     "composer/installers": "^1.3"
   }
