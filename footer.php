@@ -335,22 +335,28 @@ function make_navbutton($imgsrc, $bgcolour, $title, $url, $classes = null, $neww
         if ($classes) {
             $formclass .= " ".$classes;
         }
-        // Generate a text button.
-        $output = html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'navbutton', 'value' => $title));
-        $params = explode('?', $url, 2);
-        if (count($params) > 1) {
+        // Generate chevron based Prev & Next textual arrows
+        if($classes == 'prev' || $classes == 'next') {
+          $class = $formclass ? ' class="'.$formclass.'" ' : '';
+          $output = '<a href="'.$url.'" '.$target.$class.'><span class="'.$formclass.'-span" /></span>'.$title.'</a>';
+        }
+        else { // Generate a text button for others.
+          $output = html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'navbutton', 'value' => $title));
+          $params = explode('?', $url, 2);
+          if (count($params) > 1) {
             $params = str_replace('&amp;', '&', $params[1]);
             $params = explode('&', $params);
             foreach ($params as $param) {
-                $parts = explode('=', $param, 2);
-                if (!isset($parts[1])) {
-                    $parts[1] = null;
-                }
-                $output .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => $parts[0], 'value' => $parts[1]));
+              $parts = explode('=', $param, 2);
+              if (!isset($parts[1])) {
+                $parts[1] = null;
+              }
+              $output .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => $parts[0], 'value' => $parts[1]));
             }
-        }
+          }
 
-        $output = html_writer::tag('form', $output, array('action' => $url, 'method' => 'get', 'class' => $formclass));
+          $output = html_writer::tag('form', $output, array('action' => $url, 'method' => 'get', 'class' => $formclass));
+        }
     }
     return $output;
 }
