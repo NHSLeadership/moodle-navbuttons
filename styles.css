@@ -7,3 +7,8 @@
 #navbuttons .navbuttontext {
     float: left;
 }
+
+#navbuttons .toggletext {
+    text-align: right;
+    padding-right: 10px;
+}
