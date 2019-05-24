@@ -341,7 +341,7 @@ function make_navbutton($imgsrc, $bgcolour, $title, $url, $classes = null, $neww
         // Generate chevron based Prev & Next textual arrows
         if ($classes == 'prev' || $classes == 'next') {
             $class = $formclass ? ' class="' . $formclass . '" ' : '';
-            $output = '<a href="' . $url . '" ' . $target . $class . '><span class="' . $formclass . '-span" /></span>' . $title . '</a>';
+            $output = '<a href="' . $url . '" ' . $target . $class . '><span class="' . $formclass . '-span" />' . $title . '</span></a>';
         } else { // Generate a text button for others.
             $output = html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'navbutton', 'value' => $title));
             $params = explode('?', $url, 2);
