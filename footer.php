@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once(dirname(__FILE__).'/definitions.php');
-require_once(dirname(__FILE__).'/activityready.php');
+require_once(dirname(__FILE__) . '/definitions.php');
+require_once(dirname(__FILE__) . '/activityready.php');
 
-function draw_navbuttons() {
+function draw_navbuttons()
+{
     global $COURSE, $DB, $CFG, $PAGE;
 
     $output = '<!-- Navbuttons start -->';
@@ -25,29 +26,29 @@ function draw_navbuttons() {
 
     if (isset($CFG->navbuttons_self_test)) {
         $CFG->navbuttons_self_test = 0; // All OK.
-        return $output.'<!-- Self test -->'.$outend;
+        return $output . '<!-- Self test -->' . $outend;
     }
 
     if ($COURSE->id <= 1) {
-        return $output.'<!-- Front page -->'.$outend;
+        return $output . '<!-- Front page -->' . $outend;
     }
     if (!$settings = $DB->get_record('navbuttons', array('course' => $COURSE->id))) {
-        return $output.'<!-- No settings -->'.$outend;
+        return $output . '<!-- No settings -->' . $outend;
     }
     if (!$settings->enabled) {
-        return $output.'<!-- Not enabled -->'.$outend;
+        return $output . '<!-- Not enabled -->' . $outend;
     }
     if (!$PAGE->cm) {
-        return $output.'<!-- No course module -->'.$outend;
+        return $output . '<!-- No course module -->' . $outend;
     }
     if (!navbuttons_activity_showbuttons($PAGE->cm)) {
-        return $output.'<!-- Activity not ready for navbuttons -->'.$outend;
+        return $output . '<!-- Activity not ready for navbuttons -->' . $outend;
     }
 
     if ($CFG->branch >= 31) {
         if ($PAGE->cm->modname == 'assign') {
             if (optional_param('action', null, PARAM_ALPHA) == 'grader') {
-                return $output.'<!-- Navbuttons do not work with activity grading layout -->'.$outend;
+                return $output . '<!-- Navbuttons do not work with activity grading layout -->' . $outend;
             }
         }
     }
@@ -130,7 +131,7 @@ function draw_navbuttons() {
         }
 
         $thismod = (object)[
-            'link' => new moodle_url('/mod/'.$mod->modname.'/view.php', array('id' => $mod->id)),
+            'link' => new moodle_url('/mod/' . $mod->modname . '/view.php', array('id' => $mod->id)),
             'name' => strip_tags(format_string($mod->name, true))
         ];
 
@@ -180,7 +181,7 @@ function draw_navbuttons() {
             $home->name = get_string('frontpage', 'block_navbuttons');
         }
         list($icon, $bgcolour) = navbutton_get_icon($settings->buttonstype, 'home', $context, BLOCK_NAVBUTTONS_HOMEICON,
-                                                    $settings->backgroundcolour, $settings->customusebackground);
+            $settings->backgroundcolour, $settings->customusebackground);
         $output .= make_navbutton($icon, $bgcolour, $home->name, $home->link, "home");
     }
 
@@ -190,14 +191,14 @@ function draw_navbuttons() {
             if (!$firstcourse) {
                 $first = false;
             } else {
-                $first->name = get_string('firstcourse', 'block_navbuttons').': '.$firstcourse->name;
+                $first->name = get_string('firstcourse', 'block_navbuttons') . ': ' . $firstcourse->name;
                 $first->link = $firstcourse->link;
             }
         } else if ($settings->firstbuttontype == BLOCK_NAVBUTTONS_FIRST_IN_SECTION) {
             if (!$firstsection) {
                 $first = false;
             } else {
-                $first->name = get_string('firstsection', 'block_navbuttons').': '.$firstsection->name;
+                $first->name = get_string('firstsection', 'block_navbuttons') . ': ' . $firstsection->name;
                 $first->link = $firstsection->link;
             }
         } else {
@@ -206,34 +207,34 @@ function draw_navbuttons() {
         }
         if ($first) {
             list($icon, $bgcolour) = navbutton_get_icon($settings->buttonstype, 'first', $context, BLOCK_NAVBUTTONS_FIRSTICON,
-                                                        $settings->backgroundcolour, $settings->customusebackground);
+                $settings->backgroundcolour, $settings->customusebackground);
             $output .= make_navbutton($icon, $bgcolour, $first->name, $first->link, "first");
         }
     }
 
-    if($settings->completebuttonposition == 'before') {
+    if ($settings->completebuttonposition == 'before') {
         $output .= make_activitycomplete_button($settings);
     }
 
     if ($settings->prevbuttonshow && $prev) {
         list($icon, $bgcolour) = navbutton_get_icon($settings->buttonstype, 'prev', $context, BLOCK_NAVBUTTONS_PREVICON,
-                                                    $settings->backgroundcolour, $settings->customusebackground);
-        $output .= make_navbutton($icon, $bgcolour, get_string('prevactivity', 'block_navbuttons').': '.$prev->name,
-                                  $prev->link, "prev");
+            $settings->backgroundcolour, $settings->customusebackground);
+        $output .= make_navbutton($icon, $bgcolour, get_string('prevactivity', 'block_navbuttons') . ': ' . $prev->name,
+            $prev->link, "prev");
     }
 
-    if($settings->completebuttonposition == 'middle') {
+    if ($settings->completebuttonposition == 'middle') {
         $output .= make_activitycomplete_button($settings);
     }
 
     if ($settings->nextbuttonshow && $next) {
         list($icon, $bgcolour) = navbutton_get_icon($settings->buttonstype, 'next', $context, BLOCK_NAVBUTTONS_NEXTICON,
-                                                    $settings->backgroundcolour, $settings->customusebackground);
-        $output .= make_navbutton($icon, $bgcolour, get_string('nextactivity', 'block_navbuttons').': '.$next->name,
-                                  $next->link, "next");
+            $settings->backgroundcolour, $settings->customusebackground);
+        $output .= make_navbutton($icon, $bgcolour, get_string('nextactivity', 'block_navbuttons') . ': ' . $next->name,
+            $next->link, "next");
     }
 
-    if($settings->completebuttonposition == 'after') {
+    if ($settings->completebuttonposition == 'after') {
         $output .= make_activitycomplete_button($settings);
     }
 
@@ -243,14 +244,14 @@ function draw_navbuttons() {
             if (!$lastcourse) {
                 $last = false;
             } else {
-                $last->name = get_string('lastcourse', 'block_navbuttons').': '.$lastcourse->name;
+                $last->name = get_string('lastcourse', 'block_navbuttons') . ': ' . $lastcourse->name;
                 $last->link = $lastcourse->link;
             }
         } else if ($settings->lastbuttontype == BLOCK_NAVBUTTONS_LAST_IN_SECTION) {
             if (!$lastsection) {
                 $last = false;
             } else {
-                $last->name = get_string('lastsection', 'block_navbuttons').': '.$lastsection->name;
+                $last->name = get_string('lastsection', 'block_navbuttons') . ': ' . $lastsection->name;
                 $last->link = $lastsection->link;
             }
         } else {
@@ -259,29 +260,29 @@ function draw_navbuttons() {
         }
         if ($last) {
             list($icon, $bgcolour) = navbutton_get_icon($settings->buttonstype, 'last', $context, BLOCK_NAVBUTTONS_LASTICON,
-                                                        $settings->backgroundcolour, $settings->customusebackground);
+                $settings->backgroundcolour, $settings->customusebackground);
             $output .= make_navbutton($icon, $bgcolour, $last->name, $last->link, "last");
         }
     }
 
     if ($settings->extra1show && $settings->extra1link) {
         list($icon, $bgcolour) = navbutton_get_icon($settings->buttonstype, 'extra1', $context, BLOCK_NAVBUTTONS_EXTRA1ICON,
-                                                    $settings->backgroundcolour, $settings->customusebackground);
+            $settings->backgroundcolour, $settings->customusebackground);
         if (!$settings->extra1title) {
             $settings->extra1title = $settings->extra1link;
         }
         $output .= make_navbutton($icon, $bgcolour, $settings->extra1title, $settings->extra1link,
-                                  "extra1", $settings->extra1openin);
+            "extra1", $settings->extra1openin);
     }
 
     if ($settings->extra2show && $settings->extra2link) {
         list($icon, $bgcolour) = navbutton_get_icon($settings->buttonstype, 'extra2', $context, BLOCK_NAVBUTTONS_EXTRA2ICON,
-                                                    $settings->backgroundcolour, $settings->customusebackground);
+            $settings->backgroundcolour, $settings->customusebackground);
         if (!$settings->extra2title) {
             $settings->extra2title = $settings->extra2link;
         }
         $output .= make_navbutton($icon, $bgcolour, $settings->extra2title, $settings->extra2link,
-                                  "extra2", $settings->extra2openin);
+            "extra2", $settings->extra2openin);
     }
 
     $output .= '</div>';
@@ -291,14 +292,15 @@ function draw_navbuttons() {
     return $output;
 }
 
-function navbutton_get_icon($buttonstype, $default, $context, $iconid, $bgcolour, $customusebackground) {
+function navbutton_get_icon($buttonstype, $default, $context, $iconid, $bgcolour, $customusebackground)
+{
     global $OUTPUT, $CFG;
 
     if ($buttonstype == BLOCK_NAVBUTTONS_TYPE_ICON) {
         if ($CFG->branch < 33) {
-            $defaulturl = $OUTPUT->pix_url($default.'icon', 'block_navbuttons');
+            $defaulturl = $OUTPUT->pix_url($default . 'icon', 'block_navbuttons');
         } else {
-            $defaulturl = $OUTPUT->image_url($default.'icon', 'block_navbuttons');
+            $defaulturl = $OUTPUT->image_url($default . 'icon', 'block_navbuttons');
         }
 
         $fs = get_file_storage();
@@ -318,44 +320,44 @@ function navbutton_get_icon($buttonstype, $default, $context, $iconid, $bgcolour
     }
 }
 
-function make_navbutton($imgsrc, $bgcolour, $title, $url, $classes = null, $newwindow = false) {
+function make_navbutton($imgsrc, $bgcolour, $title, $url, $classes = null, $newwindow = false)
+{
     $url = preg_replace('/[\'"<>]/', '', $url);
     $bgcolour = preg_replace('/[^a-zA-Z0-9#]/', '', $bgcolour);
     $target = $newwindow ? ' target="_blank" ' : '';
     if ($imgsrc !== null) {
         // Generate an icon button.
-        $class = $classes ? ' class="'.$classes.'" ' : '';
-        $output = '<a href="'.$url.'" '.$target.$class.'><img alt="'.$title.'" title="'.$title.'" src="'.$imgsrc.'" style="';
+        $class = $classes ? ' class="' . $classes . '" ' : '';
+        $output = '<a href="' . $url . '" ' . $target . $class . '><img alt="' . $title . '" title="' . $title . '" src="' . $imgsrc . '" style="';
         if ($bgcolour) {
-            $output .= 'background-color: '.$bgcolour.'; ';
+            $output .= 'background-color: ' . $bgcolour . '; ';
         }
         $output .= 'margin-right: 5px;" width="50" height="50" /></a>';
     } else {
         $formclass = 'navbuttontext';
         if ($classes) {
-            $formclass .= " ".$classes;
+            $formclass .= " " . $classes;
         }
         // Generate chevron based Prev & Next textual arrows
-        if($classes == 'prev' || $classes == 'next') {
-          $class = $formclass ? ' class="'.$formclass.'" ' : '';
-          $output = '<a href="'.$url.'" '.$target.$class.'><span class="'.$formclass.'-span" /></span>'.$title.'</a>';
-        }
-        else { // Generate a text button for others.
-          $output = html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'navbutton', 'value' => $title));
-          $params = explode('?', $url, 2);
-          if (count($params) > 1) {
-            $params = str_replace('&amp;', '&', $params[1]);
-            $params = explode('&', $params);
-            foreach ($params as $param) {
-              $parts = explode('=', $param, 2);
-              if (!isset($parts[1])) {
-                $parts[1] = null;
-              }
-              $output .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => $parts[0], 'value' => $parts[1]));
+        if ($classes == 'prev' || $classes == 'next') {
+            $class = $formclass ? ' class="' . $formclass . '" ' : '';
+            $output = '<a href="' . $url . '" ' . $target . $class . '><span class="' . $formclass . '-span" /></span>' . $title . '</a>';
+        } else { // Generate a text button for others.
+            $output = html_writer::empty_tag('input', array('type' => 'submit', 'name' => 'navbutton', 'value' => $title));
+            $params = explode('?', $url, 2);
+            if (count($params) > 1) {
+                $params = str_replace('&amp;', '&', $params[1]);
+                $params = explode('&', $params);
+                foreach ($params as $param) {
+                    $parts = explode('=', $param, 2);
+                    if (!isset($parts[1])) {
+                        $parts[1] = null;
+                    }
+                    $output .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => $parts[0], 'value' => $parts[1]));
+                }
             }
-          }
 
-          $output = html_writer::tag('form', $output, array('action' => $url, 'method' => 'get', 'class' => $formclass));
+            $output = html_writer::tag('form', $output, array('action' => $url, 'method' => 'get', 'class' => $formclass));
         }
     }
     return $output;
@@ -367,7 +369,8 @@ function make_navbutton($imgsrc, $bgcolour, $title, $url, $classes = null, $neww
  * @param $settings
  * @return string
  */
-function make_activitycomplete_button($settings) {
+function make_activitycomplete_button($settings)
+{
 
     global $COURSE, $CFG, $PAGE, $OUTPUT;
 
@@ -386,19 +389,19 @@ function make_activitycomplete_button($settings) {
     $completebtntext = get_string('completebuttontext', 'block_navbuttons');
 
     if ($CFG->branch < 33) {
-        $incompletebtnicon = $OUTPUT->pix_url('crossicon', 'block_navbuttons');
-        $completebtnicon = $OUTPUT->pix_url('tickicon', 'block_navbuttons');
+        $incompletebtnicon = $OUTPUT->pix_url('completion-manual-n', 'block_navbuttons');
+        $completebtnicon = $OUTPUT->pix_url('completion-manual-y', 'block_navbuttons');
     } else {
-        $incompletebtnicon = $OUTPUT->image_url('crossicon', 'block_navbuttons');
-        $completebtnicon = $OUTPUT->image_url('tickicon', 'block_navbuttons');
+        $incompletebtnicon = $OUTPUT->image_url('completion-manual-n', 'block_navbuttons');
+        $completebtnicon = $OUTPUT->image_url('completion-manual-y', 'block_navbuttons');
     }
 
     $newstate = ($completiondata->completionstate == COMPLETION_COMPLETE) ? COMPLETION_INCOMPLETE : COMPLETION_COMPLETE;
 
-    $completionbtntext = ($completiondata->completionstate == COMPLETION_COMPLETE)? $incompletebtntext : $completebtntext;
+    $completionbtntext = ($completiondata->completionstate == COMPLETION_COMPLETE) ? $incompletebtntext : $completebtntext;
 
     if ($settings->buttonstype == BLOCK_NAVBUTTONS_TYPE_ICON) {
-        $style = 'background-color: '.$settings->backgroundcolour.'; margin-right: 5px';
+        $style = 'background-color: ' . $settings->backgroundcolour . '; margin-right: 5px';
         $completionicon = $completiondata->completionstate == COMPLETION_COMPLETE ? $incompletebtnicon : $completebtnicon;
     }
 
@@ -429,7 +432,7 @@ function make_activitycomplete_button($settings) {
         }
         $output .= html_writer::start_tag('form', array('method' => 'post',
             'action' => new moodle_url('/course/togglecompletion.php'),
-            'class' => 'togglecompletion navbuttontext'. $extraclass));
+            'class' => 'togglecompletion navbuttontext' . $extraclass));
         $output .= html_writer::start_tag('div');
         $output .= html_writer::empty_tag('input', array(
             'type' => 'hidden', 'name' => 'id', 'value' => $PAGE->cm->id));
@@ -441,23 +444,22 @@ function make_activitycomplete_button($settings) {
             'type' => 'hidden', 'name' => 'completionstate', 'value' => $newstate));
         $output .= html_writer::empty_tag('input', array(
             'type' => 'hidden', 'name' => 'btntype', 'value' => $settings->buttonstype));
-        if ($settings->buttonstype == BLOCK_NAVBUTTONS_TYPE_ICON) {
-            $output .= html_writer::empty_tag('input', array(
-                'type' => 'image',
-                'src'  => $completionicon,
-                'alt'  => $completionbtntext,
-                'class' => 'custom_activity_completion',
-                'title' => $completionbtntext,
-                'style' => $style,
-                'aria-live' => 'polite'));
-        } else {
-            $output .= html_writer::empty_tag('input', array(
-                'type' => 'submit',
-                'value' => $completionbtntext,
-                'class' => 'custom_activity_completion',
-                'style' => $style,
-                'aria-live' => 'polite'));
-        }
+
+        $completionicon = $completiondata->completionstate == COMPLETION_COMPLETE ? $completebtnicon : $incompletebtnicon;
+
+        $style = 'width: 32px; height: 32px;';
+        $cimg = html_writer::empty_tag('input', array(
+            'type' => 'image',
+            'src' => $completionicon,
+            'alt' => $completionbtntext,
+            'class' => 'custom_activity_completion icon',
+            'id' => 'custom_activity_completion_img',
+            'title' => $completionbtntext,
+            'style' => $style,
+            'aria-live' => 'polite'));
+        $divcontent = '<span id="toggleit">' . $completionbtntext . '</span>&nbsp;' . $cimg;
+
+        $output .= html_writer::div($divcontent, 'toggletext');
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('form');
     }

@@ -3,7 +3,7 @@
  */
 M.block_navbuttons = M.block_navbuttons || {};
 M.block_navbuttons.completion = {};
-M.block_navbuttons.completion.init = function(Y) {
+M.block_navbuttons.completion.init = function (Y) {
 
     var handle_success = function (id, o, args) {
 
@@ -12,33 +12,32 @@ M.block_navbuttons.completion.init = function(Y) {
 
         } else {
             var current = args.state.get('value');
-            var btntype = args.btntype.get('value');
-            var modulename = args.modulename.get('value'),
-                altstr,
-                titlestr;
+            var span = document.getElementById('toggleit');
+            var cimg = document.getElementById('custom_activity_completion_img');
             if (current == 1) {
                 // Successfully marked as complete, so change button to 'Mark incomplete'
                 altstr = M.util.get_string('incompletebuttontext', 'block_navbuttons');
-                titlestr = M.util.get_string('incompletebuttontext', 'block_navbuttons');
                 args.state.set('value', 0);
-                if(btntype == 'icon') {
-                    args.image.set('src', M.util.image_url('crossicon', 'block_navbuttons'));
-                    args.image.set('alt', altstr);
-                    args.image.set('title', titlestr);
-                } else {
-                    args.submit.set('value', altstr);
+
+                cimg.setAttribute('src', M.util.image_url('completion-manual-y', 'block_navbuttons'));
+                cimg.setAttribute('alt', altstr);
+                cimg.setAttribute('title', altstr);
+                while (span.firstChild) {
+                    span.removeChild(span.firstChild);
                 }
+                span.appendChild(document.createTextNode(altstr));
+
             } else {
                 altstr = M.util.get_string('completebuttontext', 'block_navbuttons');
-                titlestr = M.util.get_string('completebuttontext', 'block_navbuttons');
                 args.state.set('value', 1);
-                if(btntype == 'icon') {
-                    args.image.set('src', M.util.image_url('tickicon', 'block_navbuttons'));
-                    args.image.set('alt', altstr);
-                    args.image.set('title', titlestr);
-                } else {
-                    args.submit.set('value', altstr);
+                cimg.setAttribute('src', M.util.image_url('completion-manual-n', 'block_navbuttons'));
+                cimg.setAttribute('alt', altstr);
+                cimg.setAttribute('title', altstr);
+                while (span.firstChild) {
+                    span.removeChild(span.firstChild);
                 }
+                span.appendChild(document.createTextNode(altstr));
+
             }
         }
 
@@ -98,7 +97,14 @@ M.block_navbuttons.completion.init = function(Y) {
                 success: handle_success,
                 failure: handle_failure
             },
-            arguments: {state: state, submit: submit, image: image, btntype: btntype, ajax: ajax, modulename: modulename}
+            arguments: {
+                state: state,
+                submit: submit,
+                image: image,
+                btntype: btntype,
+                ajax: ajax,
+                modulename: modulename
+            }
         };
 
         Y.use('io-base', function (Y) {
